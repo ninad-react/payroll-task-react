@@ -1,0 +1,122 @@
+.tabName {
+  border-bottom: solid rgb(235, 165, 75) 4px;
+  border-radius: 5px;
+  color: rgb(235, 165, 75);
+}
+
+.myTaskContainer {
+  display: flex;
+  gap: 20px;
+  cursor: pointer;
+  padding: 15px 0;
+}
+
+.tableContainer {
+  max-width: 88vw;
+  overflow: auto;
+  div {
+    overflow: unset;
+  }
+}
+
+.buttonContainer {
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.filterButtonContainer {
+  position: relative;
+}
+
+.buttonStyles {
+  color: rgb(235, 165, 75) !important;
+  &:hover {
+    background-color: rgb(237, 223, 204) !important;
+  }
+}
+
+.filterModalContainer {
+  background: white;
+  width: 500px;
+  //   height: max-content;
+  position: absolute;
+  z-index: 2;
+  box-shadow: 0px 0px 50px 0px rgba(82, 63, 105, 0.15);
+  overflow: auto;
+  max-height: 200px;
+}
+
+.filterButtonsDisplayDiv {
+  display: flex;
+  padding: 10px 0;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.filterDisplayButtons {
+  display: flex;
+  gap: 5px;
+}
+
+.actionColumnContainer {
+  display: flex;
+  gap: 15px;
+  div {
+    width: 20px;
+  }
+}
+
+//Add Task
+.taskModalContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.addTaskModalContainer {
+  background-color: red;
+}
+// :global{
+//     .Mui-error{
+//         color: rgba(0, 0, 0, 0.87) !important;
+//         &:after{
+//             color: rgba(0, 0, 0, 0.87) !important;
+//         }
+//     }
+// }
+
+.fileLabel {
+  font-size: 1rem;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #999;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #666;
+  display: flex;
+}
+
+.fileLabel:hover {
+  padding-bottom: 2.5px;
+  border-bottom: 2px solid #1976d2;
+}
+
+.removeFile {
+  margin-left: auto;
+  font-size: 14px;
+  color: red;
+  padding: 0 10px;
+  cursor: pointer;
+}
+
+.errorMessage {
+  color: red;
+  height: 20px;
+}
+
+.taskAlignment{
+  display: flex;
+  justify-content:space-between;
+  width:300px
+}
