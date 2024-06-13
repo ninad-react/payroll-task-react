@@ -1,340 +1,211 @@
-// import React, { Suspense } from 'react';
-// import { styled, useTheme } from '@mui/material/styles';
-// import Box from '@mui/material/Box';
-// import MuiDrawer from '@mui/material/Drawer';
-// import MuiAppBar from '@mui/material/AppBar';
-// import Toolbar from '@mui/material/Toolbar';
-// import List from '@mui/material/List';
-// import CssBaseline from '@mui/material/CssBaseline';
-// import Divider from '@mui/material/Divider';
-// import IconButton from '@mui/material/IconButton';
-// import MenuIcon from '@mui/icons-material/Menu';
-// import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-// import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-// import ListItem from '@mui/material/ListItem';
-// import ListItemButton from '@mui/material/ListItemButton';
-// import ListItemIcon from '@mui/material/ListItemIcon';
-// import ListItemText from '@mui/material/ListItemText';
-// import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
-// import SettingsIcon from '@mui/icons-material/Settings';
-// import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-// import { Button } from '@mui/material';
-// import classes from "./HomeLayout.module.scss"
-// import { CheckSquare, Home, Users } from 'react-feather';
-
-// const drawerWidth = 240;
-
-// const openedMixin = (theme) => ({
-//   width: drawerWidth,
-//   transition: theme.transitions.create('width', {
-//     easing: theme.transitions.easing.sharp,
-//     duration: theme.transitions.duration.enteringScreen,
-//   }),
-//   overflowX: 'hidden',
-// });
-
-// const closedMixin = (theme) => ({
-//   transition: theme.transitions.create('width', {
-//     easing: theme.transitions.easing.sharp,
-//     duration: theme.transitions.duration.leavingScreen,
-//   }),
-//   overflowX: 'hidden',
-//   width: `calc(${theme.spacing(7)} + 1px)`,
-//   [theme.breakpoints.up('sm')]: {
-//     zIndex: 1,
-//     width: `calc(${theme.spacing(8)} + 1px)`,
-//   },
-// });
-
-// const DrawerHeader = styled('div')(({ theme }) => ({
-//   display: 'flex',
-//   alignItems: 'center',
-//   justifyContent: 'flex-end',
-//   padding: theme.spacing(0, 1),
-//   // necessary for content to be below app bar
-//   ...theme.mixins.toolbar,
-// }));
-
-// const AppBar = styled(MuiAppBar, {
-//   shouldForwardProp: (prop) => prop !== 'open',
-// })(({ theme, open }) => ({
-//   zIndex: theme.zIndex.drawer + 1,
-//   transition: theme.transitions.create(['width', 'margin'], {
-//     easing: theme.transitions.easing.sharp,
-//     duration: theme.transitions.duration.leavingScreen,
-//   }),
-//   ...(open && {
-//     marginLeft: drawerWidth,
-//     width: `calc(100% - ${drawerWidth}px)`,
-//     transition: theme.transitions.create(['width', 'margin'], {
-//       easing: theme.transitions.easing.sharp,
-//       duration: theme.transitions.duration.enteringScreen,
-//     }),
-//   }),
-// }));
-
-// const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-//   ({ theme, open }) => ({
-//     width: drawerWidth,
-//     flexShrink: 0,
-//     whiteSpace: 'nowrap',
-//     boxSizing: 'border-box',
-//     ...(open && {
-//       ...openedMixin(theme),
-//       '& .MuiDrawer-paper': openedMixin(theme),
-//     }),
-//     ...(!open && {
-//       ...closedMixin(theme),
-//       '& .MuiDrawer-paper': closedMixin(theme),
-//     }),
-//   }),
-// );
-
-// const menuItems = [
-//   {
-//     name:'Dashboard',
-//     icon: <Home/>,
-//     path: "/dashboard"
-//   },{
-//     name:'My Team',
-//     icon: <Users/>,
-//     path: "/my-teams"
-//   },{
-//     name:'My Task',
-//     icon: <CheckSquare /> ,
-//     path: "/my-task"
-//   },{
-//     name:'Billing',
-//     icon: <ReceiptLongIcon/>,
-//     path: "/billing"
-//   },{
-//     name:"Settings",
-//     icon: <SettingsIcon/>,
-//     path: "/settings"
-//   }
-// ]
-
-// export default function HomeLayout() {
-//   const theme = useTheme();
-//   const [open, setOpen] = React.useState(false);
-//   const navigate = useNavigate()
-//   const location = useLocation()
-//   // const dispatch = useDispatch()
-
-//   const handleDrawerOpen = () => {
-//     setOpen(true);
-//   };
-
-//   const handleDrawerClose = () => {
-//     setOpen(false);
-//   };
-
-//   const logout = () => {
-//     localStorage.clear()
-//     // toast.success("Logout Successful")
-//     navigate("/login")
-//   }
-
-//   return (
-//     <Box sx={{ display: 'flex', width: "inherit", overflow: 'hidden', height:'100vh' }} onClick={(e) => {
-//       e.stopPropagation()
-//       // dispatch(closeFilterModal())
-//     }}>
-//       <CssBaseline />
-//       <AppBar  open={open} style={{background:'#eba54b',position:"fixed"}}>
-//         <Toolbar>
-//           <IconButton
-//             color="inherit"
-//             aria-label="open drawer"
-//             onClick={handleDrawerOpen}
-//             edge="start"
-//             sx={{
-//               marginRight: 5,
-//               ...(open && { display: 'none' }),
-//             }}
-//           >
-//             <MenuIcon />
-//           </IconButton>
-//           <div className={classes.navbarContent}>
-//             {/* <Typography variant="h6" noWrap component="div">
-//               {capitalizePath(location?.pathname?.slice(1))}
-//               {location?.pathname?.slice(1)}
-//             </Typography> */}
-//             {/* <ShowTime /> */}
-//             <Button sx={{
-//               background:"#f8f8f8",
-//               "&:hover": {
-//                 background: "#ebebeb",
-//               }}}
-//               onClick={logout}
-//             >
-//               Logout
-//             </Button>
-//           </div>
-//         </Toolbar>
-//       </AppBar>
-//       <Drawer variant="permanent" open={open}>
-//         <DrawerHeader>
-//           <IconButton onClick={handleDrawerClose}>
-//             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-//           </IconButton>
-//         </DrawerHeader>
-//         <Divider />
-//         <List>
-//           {menuItems.map((item) => (
-//             <ListItem 
-//               key={item.name} 
-//               disablePadding 
-//               sx={{ display: 'block' }} 
-//               onClick={() => {
-//                 navigate(item.path)
-//               }}
-//             >
-//               <ListItemButton
-//                 sx={{
-//                   minHeight: 48,
-//                   justifyContent: open ? 'initial' : 'center',
-//                   px: 2.5,
-//                 }}
-//               >
-//                 <ListItemIcon
-//                   sx={{
-//                     minWidth: 0,
-//                     mr: open ? 3 : 'auto',
-//                     justifyContent: 'center',
-//                   }}
-//                 >
-//                   {item.icon}
-//                 </ListItemIcon>
-//                 <ListItemText primary={item.name} sx={{ opacity: open ? 1 : 0 }} />
-//               </ListItemButton>
-//             </ListItem>
-//           ))}
-//         </List>
-//       </Drawer>
-//       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-//         <DrawerHeader />
-//         {/* <Suspense fallback={<Spinner size={"15vw"}/>}> */}
-//         <Suspense fallback={"Loading"} >
-//           <Outlet />
-//         </Suspense>
-//       </Box>
-//     </Box>
-//   );
-// }
-
-// components/HomeLayout.js
-import React, { useState } from 'react';
+import * as React from 'react';
+import { styled, useTheme } from '@mui/material/styles';
+import Box from '@mui/material/Box';
+import MuiDrawer from '@mui/material/Drawer';
+import MuiAppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import List from '@mui/material/List';
+import CssBaseline from '@mui/material/CssBaseline';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import InboxIcon from '@mui/icons-material/MoveToInbox';
+import MailIcon from '@mui/icons-material/Mail';
+import { CheckSquare, Home, LogOut, Settings, Users } from 'react-feather';
+import { Receipt } from '@mui/icons-material';
 import { Outlet, useNavigate } from 'react-router-dom';
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  IconButton,
-  Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  CssBaseline,
-  Box,
-} from '@mui/material';
-import { Menu as MenuIcon, Home as HomeIcon, Info as InfoIcon, Logout as LogoutIcon } from '@mui/icons-material';
 
 const drawerWidth = 240;
 
-const HomeLayout = () => {
-  const [mobileOpen, setMobileOpen] = useState(false);
+const openedMixin = (theme) => ({
+  width: drawerWidth,
+  transition: theme.transitions.create('width', {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.enteringScreen,
+  }),
+  overflowX: 'hidden',
+});
+
+const closedMixin = (theme) => ({
+  transition: theme.transitions.create('width', {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  overflowX: 'hidden',
+  width: `calc(${theme.spacing(7)} + 1px)`,
+  [theme.breakpoints.up('sm')]: {
+    width: `calc(${theme.spacing(8)} + 1px)`,
+  },
+});
+
+const DrawerHeader = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'flex-end',
+  padding: theme.spacing(0, 1),
+  // necessary for content to be below app bar
+  ...theme.mixins.toolbar,
+}));
+
+const AppBar = styled(MuiAppBar, {
+  shouldForwardProp: (prop) => prop !== 'open',
+})(({ theme, open }) => ({
+  zIndex: theme.zIndex.drawer + 1,
+  transition: theme.transitions.create(['width', 'margin'], {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  ...(open && {
+    marginLeft: drawerWidth,
+    width: `calc(100% - ${drawerWidth}px)`,
+    transition: theme.transitions.create(['width', 'margin'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+  }),
+}));
+
+const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
+  ({ theme, open }) => ({
+    width: drawerWidth,
+    flexShrink: 0,
+    whiteSpace: 'nowrap',
+    boxSizing: 'border-box',
+    ...(open && {
+      ...openedMixin(theme),
+      '& .MuiDrawer-paper': openedMixin(theme),
+    }),
+    ...(!open && {
+      ...closedMixin(theme),
+      '& .MuiDrawer-paper': closedMixin(theme),
+    }),
+  }),
+);
+
+export default function MiniDrawer() {
+  const theme = useTheme();
+  const [open, setOpen] = React.useState(false);
   const navigate = useNavigate();
 
-  const handleDrawerToggle = () => {
-    console.log('mobileOpen', mobileOpen)
-    setMobileOpen(!mobileOpen);
+  const handleDrawerOpen = () => {
+    setOpen(true);
   };
 
-  const drawer = (
-    <div>
-      <Toolbar />
-      <List>
-        <ListItem button onClick={() => navigate('/')}>
-          <ListItemIcon>
-            <HomeIcon />
-          </ListItemIcon>
-          <ListItemText primary="Home" />
-        </ListItem>
-        <ListItem button onClick={() => navigate('/about')}>
-          <ListItemIcon>
-            <InfoIcon />
-          </ListItemIcon>
-          <ListItemText primary="About" />
-        </ListItem>
-      </List>
-    </div>
-  );
+  const handleDrawerClose = () => {
+    setOpen(false);
+  };
+
+  const menuItems = [
+    {
+      name:'Dashboard',
+      icon: <Home/>,
+      path: "/dashboard"
+    },{
+      name:'My Team',
+      icon: <Users/>,
+      path: "/my-teams"
+    },{
+      name:'My Task',
+      icon: <CheckSquare /> ,
+      path: "/my-task"
+    },{
+      name:'Billing',
+      icon: <Receipt/>,
+      path: "/billing"
+    },{
+      name:"Settings",
+      icon: <Settings/>,
+      path: "/settings"
+    }
+  ]
 
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+      <AppBar position="fixed" open={open}>
         <Toolbar>
           <IconButton
             color="inherit"
             aria-label="open drawer"
+            onClick={handleDrawerOpen}
             edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2 }}
+            sx={{
+              marginRight: 5,
+              ...(open && { display: 'none' }),
+            }}
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap sx={{ flexGrow: 1 }}>
+
+          <Typography variant="h6" noWrap component="div">
             Payroll Task 
           </Typography>
-          <IconButton color="inherit" onClick={() => alert('Logged Out')}>
-            <LogoutIcon />
+
+          <IconButton
+            color="inherit"
+            aria-label="logout"
+            onClick={handleDrawerOpen}
+            edge="end"
+            sx={{
+              marginLeft: 'auto',
+            }}
+          >
+            <LogOut />
           </IconButton>
         </Toolbar>
       </AppBar>
-      <Box
-        component="nav"
-        sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
-        aria-label="mailbox folders"
-      >
-        <Drawer
-          variant="temporary"
-          open={mobileOpen}
-          // onClose={handleDrawerToggle}
-          // ModalProps={{
-          //   keepMounted: true  ,
-          // }}
-          sx={{
-            // display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-          }}
-        >
-          {drawer}
-        </Drawer>
-        {/* <Drawer
-          variant="permanent"
-          sx={{
-            display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { boxSizing: 'border-box', width: drawerWidth },
-          }}
-          open
-        >
-          {drawer}
-        </Drawer> */}
-      </Box>
-      <Box
-        component="main"
-        sx={{ flexGrow: 1, p: 3, width: { sm: `calc(100% - ${drawerWidth}px)` } }}
-      >
-        <Toolbar />
-        <Outlet />
+      <Drawer variant="permanent" open={open}>
+        <DrawerHeader>
+          <IconButton onClick={handleDrawerClose}>
+            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+          </IconButton>
+        </DrawerHeader>
+        <Divider />
+        <List>
+          {menuItems.map((item) => (
+            <ListItem 
+              key={item.name} 
+              disablePadding 
+              sx={{ display: 'block' }} 
+              onClick={() => {
+                navigate(item.path)
+              }}
+            >
+              <ListItemButton
+                sx={{
+                  minHeight: 48,
+                  justifyContent: open ? 'initial' : 'center',
+                  px: 2.5,
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    minWidth: 0,
+                    mr: open ? 3 : 'auto',
+                    justifyContent: 'center',
+                  }}
+                >
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText primary={item.name} sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Drawer>
+      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+        <DrawerHeader />
+        <React.Suspense fallback={"Loading"} >
+           <Outlet />
+        </React.Suspense>
       </Box>
     </Box>
   );
-};
-
-export default HomeLayout;
-
-
+}
