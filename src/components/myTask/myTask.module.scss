@@ -25,3 +25,12 @@
       margin: 0 1px;
     }
   }
+
+  .actionColumnContainer {
+    display: flex;
+    gap: 15px;
+
+    div {
+        width: 20px;
+    }
+  }

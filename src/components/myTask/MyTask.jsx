@@ -1,78 +1,17 @@
 import React, { memo, useEffect, useState } from 'react'
-import styles from './myTask.module.scss'
 import DataTable from 'react-data-table-component';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { IconButton } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { getMyTaskList } from './store';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import moment from 'moment';
+import TaskArchive from "../../assets/images/TaskArchive.svg"
+import TaskAccept from "../../assets/images/TaskAccept.svg"
+import TaskViewCoverage from "../../assets/images/TaskViewTaskCoverage.svg"
+import TaskDelete from "../../assets/images/TaskDelete.svg"
+import TaskComplete from "../../assets/images/TaskComplete.svg"
+import TaskPartialComplete from "../../assets/images/TaskPartialComplete.svg"
 
-const columns = [
-    {
-      name: 'Title',
-      selector: row => row.title,
-      sortable: true,
-    },
-    {
-      name: 'Customer Name',
-      selector: row => row.customerName,
-      sortable: true,
-    },
-    {
-      name: 'Assigned By',
-      selector: row => row.assignedBy,
-      sortable: true,
-    },
-    {
-      name: 'Assigned Date',
-      selector: row => row.assignedDate,
-      sortable: true,
-    },
-    {
-      name: 'Due Date',
-      selector: row => row.dueDate,
-      sortable: true,
-    },
-    {
-      name: 'Priority',
-      selector: row => row.priority,
-      sortable: true,
-    },
-    {
-      name: 'Status',
-      selector: row => row.status,
-      sortable: true,
-    },
-    {
-      name: 'Actions',
-      cell: row => (
-        <>
-          <IconButton aria-label="edit">
-            <EditIcon />
-          </IconButton>
-          <IconButton aria-label="delete">
-            <DeleteIcon />
-          </IconButton>
-        </>
-      ),
-      ignoreRowClick: true,
-      allowOverflow: true,
-      button: true,
-    },
-  ];
-
-  const data = [
-    {
-      id: 1,
-      title: 'Task 1',
-      customerName: 'John Doe',
-      assignedBy: 'Jane Smith',
-      assignedDate: '2024-06-10',
-      dueDate: '2024-06-20',
-      priority: 'High',
-      status: 'Open',
-    },
-  ];
+import styles from './myTask.module.scss'
 
   const customStyles = {
     rows: {
@@ -99,8 +38,16 @@ const MyTask = () => {
 
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const { allTasks, totalCount, filter } = useSelector(
+        (state) => state.userTask
+    );
 
     const dispatch = useDispatch();
+
+    const stringToDate = (str) => {
+        const date = new Date(str);
+        return moment (date).format("Do MMM YYYY");
+      };
 
     const allData = () => {
         const from = page * rowsPerPage + 1;
@@ -125,16 +72,108 @@ const MyTask = () => {
         );
       };
 
+      const columns = [
+        {
+          name: 'Title',
+          selector: row => row.Title || '-',
+          sortable: true,
+        },
+        {
+          name: 'Customer Name',
+          selector: row => row.LeadName || '-',
+          sortable: true,
+        },
+        {
+          name: 'Assigned By',
+          selector: row => row.AssignedByUserName || '-',
+          sortable: true,
+        },
+        {
+          name: 'Assigned Date',
+          selector: row => stringToDate(row?.CreateDate) || "-",
+          sortable: true,
+        },
+        {
+          name: 'Due Date',
+          selector: row => stringToDate(row?.TaskEndDate) || "-",
+          sortable: true,
+        },
+        {
+          name: 'Priority',
+          selector: row => row.Priority || '-',
+          sortable: true,
+        },
+        {
+          name: 'Status',
+          selector: row => row.TaskStatus || '-',
+          sortable: true,
+        },
+        {
+          name: 'Actions',
+          cell: row => (
+            <div className={styles.actionColumnContainer}>
+                <div>
+                    <Tooltip title="Archive">
+                        <img 
+                            src={TaskArchive}
+                            onClick={() => console.log("archive clicked...")}
+                        />
+                    </Tooltip>
+                </div>
+
+                <div>
+                    {row?.TaskStatus === -1 && (
+                        <Tooltip title="Accept">
+                            <img src={TaskAccept}/>
+                        </Tooltip>
+                    )}
+                </div>
+
+                <div>
+                    <Tooltip title="View Task Coverage">
+                        <img src={TaskViewCoverage} />
+                    </Tooltip>
+                </div>
+
+                <div>
+                    <Tooltip title="Delete">
+                        <img src={TaskDelete} />
+                    </Tooltip>
+                </div>
+
+                <div>
+                    {row?.TaskStatus === 0 && (
+                        <Tooltip title="Complete">
+                            <img src={TaskComplete} />
+                        </Tooltip>
+                    )}
+                </div>
+
+                <div>
+                    {row?.TaskStatus === 0 && (
+                        <Tooltip title="Partial Complete">
+                            <img src={TaskPartialComplete} />
+                        </Tooltip>
+                    )}
+                </div>
+            </div>
+          ),
+          ignoreRowClick: true,
+          allowOverflow: true,
+          button: true,
+        },
+      ];
+
       useEffect(() => {
         allData();
       }, []);
 
   return (
     <div>
-        <DataTable 
+        <DataTable
             title="Task Management"
             columns={columns}
-            data={data}
+            data={allTasks}
             pagination
             responsive
             customStyles={customStyles}
