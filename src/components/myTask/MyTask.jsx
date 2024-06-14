@@ -100,6 +100,7 @@ const MyTask = () => {
         },
         {
           name: 'Priority',
+          width: '100px',
           selector: row => row.Priority || '-',
           sortable: true,
         },
@@ -109,7 +110,7 @@ const MyTask = () => {
           sortable: true,
         },
         {
-          name: 'Actions',
+          name: '',
           cell: row => (
             <div className={styles.actionColumnContainer}>
                 <div>
@@ -176,7 +177,7 @@ const MyTask = () => {
             data={allTasks}
             pagination
             responsive
-            customStyles={customStyles}
+            // customStyles={customStyles}
         />
     </div>
   )
