@@ -12,6 +12,9 @@ import TaskComplete from "../../assets/images/TaskComplete.svg"
 import TaskPartialComplete from "../../assets/images/TaskPartialComplete.svg"
 
 import styles from './myTask.module.scss'
+import privateRequest from '../services/privateRequest';
+import { TASK_COVERAGE, UPDATE_TASK_STATUS } from '../services/apiEndPoints';
+import toast from 'react-hot-toast';
 
   const customStyles = {
     rows: {
@@ -38,6 +41,11 @@ const MyTask = () => {
 
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [confirmModal, setConfirmModal] = useState({
+      open: false,
+      title: "",
+      id: null
+    });
     const { allTasks, totalCount, filter } = useSelector(
         (state) => state.userTask
     );
@@ -48,6 +56,36 @@ const MyTask = () => {
         const date = new Date(str);
         return moment (date).format("Do MMM YYYY");
       };
+
+    const handleButtonClick = (action, id) => {
+      switch(action) {
+        case "archive": {
+          setConfirmModal({open: true, title: 'Archive', id: id})
+          break;
+        }
+        case "delete": {
+          setConfirmModal({open: true, title: 'Delete', id: id})
+          break;
+        }
+        case "complete": {
+          setConfirmModal({open: true, title: 'Complete', id: id})
+          break;
+        }
+        case "Task Coverage": {
+          (async () => {
+            const res = await privateRequest.get(TASK_COVERAGE, {
+              params: {
+                taskId: id,
+              },
+            });
+            setConfirmModal({ open: true, title: "Task Coverage", id:res})
+          })();
+        }
+        default: {
+          break;
+        }
+      }
+    };
 
     const allData = () => {
         const from = page * rowsPerPage + 1;
@@ -117,7 +155,7 @@ const MyTask = () => {
                     <Tooltip title="Archive">
                         <img 
                             src={TaskArchive}
-                            onClick={() => console.log("archive clicked...")}
+                            onClick={() => handleButtonClick("archive", row?.TaskId)}
                         />
                     </Tooltip>
                 </div>
@@ -125,27 +163,48 @@ const MyTask = () => {
                 <div>
                     {row?.TaskStatus === -1 && (
                         <Tooltip title="Accept">
-                            <img src={TaskAccept}/>
+                            <img 
+                              onClick={async () => {
+                                const res = await privateRequest.post(UPDATE_TASK_STATUS, {
+                                  TaskId: row?.TaskId,
+                                  TaskStatus: 0,
+                                });
+                                if(res) {
+                                  toast.success("Task Accepted");
+                                  allData();
+                                }
+                              }}
+                              src={TaskAccept}
+                            />
                         </Tooltip>
                     )}
                 </div>
 
                 <div>
                     <Tooltip title="View Task Coverage">
-                        <img src={TaskViewCoverage} />
+                        <img 
+                        onClick={() => handleButtonClick("Task Coverage", row.TaskId)}
+                        src={TaskViewCoverage} 
+                        />
                     </Tooltip>
                 </div>
 
                 <div>
                     <Tooltip title="Delete">
-                        <img src={TaskDelete} />
+                        <img 
+                        onClick={() => handleButtonClick("delete", row.TaskId)}
+                        src={TaskDelete} 
+                        />
                     </Tooltip>
                 </div>
 
                 <div>
                     {row?.TaskStatus === 0 && (
                         <Tooltip title="Complete">
-                            <img src={TaskComplete} />
+                            <img 
+                            onClick={() => handleButtonClick("complete", row.TaskId)}
+                            src={TaskComplete} 
+                            />
                         </Tooltip>
                     )}
                 </div>
@@ -153,7 +212,7 @@ const MyTask = () => {
                 <div>
                     {row?.TaskStatus === 0 && (
                         <Tooltip title="Partial Complete">
-                            <img src={TaskPartialComplete} />
+                            <img src={TaskPartialComplete} width='20px' height='20px' />
                         </Tooltip>
                     )}
                 </div>
