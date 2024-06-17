@@ -65,7 +65,7 @@ const MyTask = () => {
 
   const stringToDate = (str) => {
     const date = new Date(str);
-    return moment(date).format("DD MM YYYY");
+    return moment(date).format("DD-MM-YYYY");
   }
 
   const checkOverDue = (date) => {
