@@ -1,37 +1,58 @@
-@media only screen and (max-width: 768px) {
-    .rdt_TableCell {
-      padding: 4px 8px;
-    }
-  
-    .rdt_TableHeader {
-      font-size: 14px;
-    }
-  
-    .rdt_TableCell > button {
-      margin: 0 2px;
+.taskConatiner {
+  display: flex;
+  gap: 25px;
+  cursor: pointer;
+  padding: 15px 0;
+
+  .tabName {
+    border-bottom: solid #1976d2;
+    border-radius: 2px;
+    color: #1976d2;
+  }
+}
+
+.btnContainer {
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+
+  .btnStyle {
+    background-color: #1976d2 !important;
+    color: #ffffff;
+    &:hover {
+      background-color: rgb(237, 223, 204) !important;
     }
   }
-  
-  @media only screen and (max-width: 480px) {
-    .rdt_TableHeader {
-      font-size: 12px;
-    }
-  
-    .rdt_TableCell {
-      font-size: 12px;
-    }
-  
-    .rdt_TableCell > button {
-      margin: 0 1px;
-    }
+}
+
+.tableContainer {
+  max-width: 88vw;
+  overflow: auto;
+  div {
+    overflow: unset;
   }
+}
 
-  .actionColumnContainer {
-    display: flex;
-    gap: 15px;
-
-    div {
-        width: 20px;
-    }
-
+.actionColumnContainer {
+  display: flex;
+  gap: 15px;
+  div {
+    width: 20px;
   }
+}
+
+.taskAlignment{
+  display: flex;
+  justify-content:space-between;
+  width:300px
+}
+
+.taskModalContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.filterBtnContainer {
+  position: relative;
+}
