@@ -30,6 +30,8 @@ import styles from './myTask.module.scss'
 import { ClearIcon } from '@mui/x-date-pickers';
 import DataTable from 'react-data-table-component';
 import Pagination from '../../utility/Pagination';
+import FilterForm from './FilterForm';
+import AddTaskForm from './AddTaskForm';
 
 const MyTask = () => {
 
@@ -385,11 +387,11 @@ const MyTask = () => {
             </Button>
             {addTaskModalOpen && (
               <div className={styles.taskModalContainer}>
-                {/* <AddTaskForm 
+                <AddTaskForm
                   addTaskModalOpen={addTaskModalOpen}
                   setAddTaskModalOpen={setAddTaskModalOpen}
                   allData={allData}
-                /> */}
+                />
               </div>
             )}
           </div>
@@ -530,10 +532,10 @@ const MyTask = () => {
       )}
       {filterModalOpen && (
         <div className={styles.filterBtnContainer}>
-          {/* <FilterForm 
+          <FilterForm
             filterModalOpen={filterModalOpen}
             setFilterModalOpen={setFilterModalOpen}
-          /> */}
+          />z
         </div>
       )}
     </div>
