@@ -16,11 +16,10 @@ import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import InboxIcon from '@mui/icons-material/MoveToInbox';
-import MailIcon from '@mui/icons-material/Mail';
 import { CheckSquare, Home, LogOut, Settings, Users } from 'react-feather';
 import { Receipt } from '@mui/icons-material';
 import { Outlet, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const drawerWidth = 240;
 
@@ -102,6 +101,12 @@ export default function MiniDrawer() {
     setOpen(false);
   };
 
+  const handleLogout = () => {
+    localStorage.clear()
+    navigate('/login')
+    toast.success("Logout successfully")
+  }
+
   const menuItems = [
     {
       name:'Dashboard',
@@ -147,11 +152,11 @@ export default function MiniDrawer() {
           <Typography variant="h6" noWrap component="div">
             Payroll Task 
           </Typography>
-
+            
           <IconButton
             color="inherit"
             aria-label="logout"
-            onClick={handleDrawerOpen}
+            onClick={handleLogout}
             edge="end"
             sx={{
               marginLeft: 'auto',

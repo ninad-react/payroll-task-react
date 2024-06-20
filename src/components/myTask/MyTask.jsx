@@ -134,6 +134,7 @@ const MyTask = () => {
           });
           setConfirmModal({ open: true, title: "Task Coverage", id: res });
         })();
+        break;
       }
       default: {
         break;

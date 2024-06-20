@@ -13,7 +13,7 @@ const App = () => {
       <Provider store={store}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <RouterProvider router={PrivateRouting} />
-          <Toaster />
+          <Toaster position="top-right"/>
         </LocalizationProvider>
       </Provider>
     </div>
