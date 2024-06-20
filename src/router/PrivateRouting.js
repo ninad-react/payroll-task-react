@@ -3,6 +3,7 @@ import { createBrowserRouter } from "react-router-dom";
 import Login from "../components/login/Login"
 import HomeLayout from "../layout/HomeLayout"
 import ProtectedRoute from "./ProtectedRoute";
+import PublicRoute from "./PublicRoute";
 const Dashboard = lazy(() => import("../components/dashboard/Dashboard"))
 const MyTask = lazy(() => import("../components/myTask/MyTask"))
 const Billing = lazy(() => import("../components/billing/Billing"))
@@ -13,7 +14,11 @@ const MyTeams = lazy(() => import("../components/myTeams/MyTeams"))
 export const PrivateRouting = createBrowserRouter([
   {
     path:'/login',
-    element:<Login/>
+    element:( 
+      <PublicRoute>
+        <Login/>
+      </PublicRoute>
+    )
   },
   {
     path: "/",
