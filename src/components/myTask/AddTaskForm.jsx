@@ -46,7 +46,7 @@ const AddTaskForm = ({ addTaskModalOpen, setAddTaskModalOpen, allData }) => {
   const fileRef = useRef(null);
   const INITIAL_FILE_LABEL = "Attach File *";
   const dispatch = useDispatch();
-  const { leadsList, companyMembers, filter } = useSelector(
+  const { leadsList, companyMembers } = useSelector(
     (state) => state.userTask
   );
   const selectOptions = useMemo(() => {
@@ -174,10 +174,12 @@ const AddTaskForm = ({ addTaskModalOpen, setAddTaskModalOpen, allData }) => {
     reset();
     setAddTaskModalOpen(false);
   };
+
   useEffect(() => {
     reset();
     setFileLabel(INITIAL_FILE_LABEL);
   }, [selectedTab]);
+
   useEffect(() => {
     dispatch(getLeadsList({ From: 1, Text: "", To: -1 }));
     dispatch(getCompanyMembers({ from: 1, to: 1000 }));
@@ -190,6 +192,7 @@ const AddTaskForm = ({ addTaskModalOpen, setAddTaskModalOpen, allData }) => {
   useEffect(() => {
     if(values.Description) clearErrors("Description");
   }, [values.Description, clearErrors])
+
   return (
     <div>
       <form>

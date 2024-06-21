@@ -32,6 +32,7 @@ import DataTable from 'react-data-table-component';
 import Pagination from '../../utility/Pagination';
 import FilterForm from './FilterForm';
 import AddTaskForm from './AddTaskForm';
+import Loader from '../loader/Loader';
 
 const MyTask = () => {
 
@@ -42,7 +43,7 @@ const MyTask = () => {
     id: null
   })
   const [filterModalOpen, setFilterModalOpen] = useState(false);
-  const {allTasks, totalCount, filter} = useSelector(
+  const {allTasks, totalCount, filter, isLoading} = useSelector(
     (state) => state.userTask
   )
   const [searchTerm, setSearchTerm] = useState('');
@@ -352,7 +353,11 @@ const MyTask = () => {
 
   return (
     <div>
-      <div className={styles.taskConatiner}>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <>
+          <div className={styles.taskConatiner}>
           {tabs.map((item, id) => {
             return (
               <div 
@@ -545,6 +550,9 @@ const MyTask = () => {
           />z
         </div>
       )}
+        </>
+      )}
+      
     </div>
   )
 }
