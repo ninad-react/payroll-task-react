@@ -253,6 +253,7 @@ const MyTask = () => {
                 src={TaskArchive}
                 alt='TaskArchive'
                 onClick={() => handleButtonClick("archive", row?.TaskId)}
+                className={styles.cursorClass}
               />
             </Tooltip>
           </div>
@@ -272,6 +273,7 @@ const MyTask = () => {
                   }}
                   src={TaskAccept}
                   alt='TaskAccept'
+                  className={styles.cursorClass}
                 />
               </Tooltip>
             )}
@@ -282,6 +284,7 @@ const MyTask = () => {
                 onClick={() => handleButtonClick("Task Coverage", row.TaskId)}
                 src={TaskViewTaskCoverage}
                 alt='TaskViewTaskCoverage'
+                className={styles.cursorClass}
               />
             </Tooltip>
           </div>
@@ -291,6 +294,7 @@ const MyTask = () => {
                 onClick={() => handleButtonClick("delete", row.TaskId)}
                 src={TaskDelete}
                 alt='TaskDelete'
+                className={styles.cursorClass}
               />
             </Tooltip>
           </div>
@@ -301,6 +305,7 @@ const MyTask = () => {
                   onClick={() => handleButtonClick("complete", row.TaskId)}
                   src={TaskComplete}
                   alt='TaskComplete'
+                  className={styles.cursorClass}
                 />
               </Tooltip>
             )}
@@ -314,6 +319,7 @@ const MyTask = () => {
                   alt='TaskPartialComplete'
                   width="20px"
                   height="20px"
+                  className={styles.cursorClass}
                 />
               </Tooltip>
             )}
@@ -363,7 +369,7 @@ const MyTask = () => {
       <Divider />
       <div className={styles.btnContainer}>
           <Button 
-            className={styles.btnStyle}
+            // className={styles.btnStyle}
             onClick={() => setFilterModalOpen(true)}
           >
             Filter

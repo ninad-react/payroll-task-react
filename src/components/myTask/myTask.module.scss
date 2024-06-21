@@ -81,6 +81,7 @@
   display: flex;
 }
 
+
 .fileLabel:hover {
   padding-bottom: 2.5px;
   border-bottom: 2px solid #1976d2;
@@ -94,3 +95,6 @@
   cursor: pointer;
 }
 
+.cursorClass {
+  cursor: pointer;
+}

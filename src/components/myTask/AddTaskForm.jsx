@@ -35,6 +35,9 @@ const AddTaskForm = ({ addTaskModalOpen, setAddTaskModalOpen, allData }) => {
   const tabs = ["Assign To Others", "Assign To Me"];
   const [selectedTab, setSelectedTab] = useState(0);
   const [fileLabel, setFileLabel] = useState("Attach File *");
+  const [fileError, setFileError] = useState(false);
+  const [endDateError, setEndDateError] = useState(false);
+  const [addUserError, setAddUserError] = useState(false);
   const [search, setSearch] = useState({
     customers: "",
     users: "",
@@ -94,17 +97,30 @@ const AddTaskForm = ({ addTaskModalOpen, setAddTaskModalOpen, allData }) => {
     getValues,
     setValue,
     watch,
-    reset,
     trigger,
+    reset,
     unregister,
     formState: { errors },
   } = useForm({ defaultValues: initialValues });
 
   const values = getValues();
-  console.log("values", values);
-  const handleFormSubmit = async (values) => {
-    // const values = getValues();
-    console.log("values3456789", values);
+  console.log('endDateError', endDateError, addUserError)
+  const handleFormSubmit = async () => {
+    const values = getValues();
+    console.log('values', values)
+
+    if (!values?.file) {
+      setFileError(true)
+      return
+    }
+    if (!values?.TaskEndDate) {
+      setEndDateError(true)
+      return
+    }
+    if (!values?.UserIds) {
+      setAddUserError(true)
+      return
+    }
     const tempFile = values.file && (await getBase64(values.file));
     const fileFullName = values?.file?.name?.split(".");
     let submitObj = {
@@ -147,10 +163,12 @@ const AddTaskForm = ({ addTaskModalOpen, setAddTaskModalOpen, allData }) => {
     allData();
   };
   const handleFileChange = (e) => {
+    setFileError(false)
     const file = e.target.files[0];
     setValue("file", file);
     setFileLabel(file ? file.name : INITIAL_FILE_LABEL);
   };
+
   const handleCancel = () => {
     reset();
     setAddTaskModalOpen(false);
@@ -234,7 +252,7 @@ const AddTaskForm = ({ addTaskModalOpen, setAddTaskModalOpen, allData }) => {
                     ref={fileRef}
                     type="file"
                     onChange={handleFileChange}
-                    styles={{ display: "none" }}
+                    style={{ display: "none" }}
                   />
                   <div className="d-flex">
                     <label htmlFor="fileupload" className={styles.fileLabel}>
@@ -256,7 +274,7 @@ const AddTaskForm = ({ addTaskModalOpen, setAddTaskModalOpen, allData }) => {
                     )}
                   </div>
                 </div>
-                <div className={styles.errorMessage}></div>
+                <div className={styles.errorMessage}>{fileError && "File is required"}</div>
                 <div>
                   {/* <label>Leads/Customer Name</label> */}
                   <Autocomplete
@@ -283,7 +301,7 @@ const AddTaskForm = ({ addTaskModalOpen, setAddTaskModalOpen, allData }) => {
                   />
                 </div>
                 <div className={styles.errorMessage}></div>
-                <div className={styles.errorMessage}></div>
+                {/* <div className={styles.errorMessage}></div> */}
                 <FormControl variant="standard" fullWidth>
                   <div>
                     <DatePicker
@@ -291,18 +309,20 @@ const AddTaskForm = ({ addTaskModalOpen, setAddTaskModalOpen, allData }) => {
                       name="TaskEndDate"
                       value={values?.TaskEndDate || null}
                       className={classes.fullWidth}
-                      onChange={(val) => setValue("TaskEndDate", val)}
-                      onBlur={() => {
-                        trigger("TaskEndDate");
+                      onChange={(val) => {
+                        setValue("TaskEndDate", val)
+                        setEndDateError(false)
                       }}
                       slotProps={{ textField: { variant: "standard" } }}
                     />
                   </div>
                 </FormControl>
-                <div className={classes.errorMessage}>
+                {/* <div className={classes.errorMessage}>
                   {errors?.TaskEndDate && "Task End Date is required"}
-                </div>
-                <FormControl variant="standard" fullWidth>
+                </div> */}
+                
+                <div className={styles.errorMessage}>{endDateError && "Task End Date is required"}</div>
+                <FormControl variant="standard" fullWidth style={{ marginTop: "15px" }}>
                   <div>
                     <InputLabel id="demo-simple-select-standard-label">
                       Priority
@@ -340,7 +360,9 @@ const AddTaskForm = ({ addTaskModalOpen, setAddTaskModalOpen, allData }) => {
                           users: newInputValue,
                         }));
                       }}
-                      onChange={(e, val) => setValue("UserIds", val)}
+                      onChange={(e, val) => {
+                        setAddUserError(false)
+                        setValue("UserIds", val)}}
                       options={memberOptions ? Object.keys(memberOptions) : []}
                       renderInput={(params) => (
                         <TextField
@@ -352,9 +374,11 @@ const AddTaskForm = ({ addTaskModalOpen, setAddTaskModalOpen, allData }) => {
                     />
                   </div>
                 )}
-                <div className={styles.errorMessage}>
+                {/* <div className={styles.errorMessage}>
                   {errors.UserIds ? "Please Select Users" : ""}
-                </div>
+                </div> */}
+                
+                <div className={styles.errorMessage}>{addUserError && "File is required"}</div>
                 <div>
                   <Autocomplete
                     multiple
@@ -385,14 +409,18 @@ const AddTaskForm = ({ addTaskModalOpen, setAddTaskModalOpen, allData }) => {
                 <div className={styles.errorMessage}></div>
               </DialogContentText>
             </DialogContent>
-            <DialogActions>
-              <Button className={styles.btnStyle} onClick={handleCancel}>
+            <DialogActions style={{ marginRight: "20px", marginBottom: "5px" }}>
+              <Button onClick={handleCancel}>
                 Cancel
               </Button>
               <Button
-                className={styles.buttonStyles}
-                type="submit"
-                onClick={() => handleSubmit((e) => handleFormSubmit(e))()}
+                className={styles.btnStyle}
+                // type="submit"
+                onClick={(e) => {
+                  console.log('kjf')
+                  trigger()
+                  handleFormSubmit(e)
+                }}
               >
                 Submit
               </Button>
