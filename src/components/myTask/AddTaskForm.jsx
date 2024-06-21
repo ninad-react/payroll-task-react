@@ -100,27 +100,29 @@ const AddTaskForm = ({ addTaskModalOpen, setAddTaskModalOpen, allData }) => {
     trigger,
     reset,
     unregister,
+    clearErrors,
     formState: { errors },
   } = useForm({ defaultValues: initialValues });
 
   const values = getValues();
-  console.log('endDateError', endDateError, addUserError)
   const handleFormSubmit = async () => {
     const values = getValues();
-    console.log('values', values)
 
-    if (!values?.file) {
-      setFileError(true)
-      return
+    const requiredFiles = [
+      "file",
+      "TaskEndDate",
+      "UserIds"
+    ]
+
+    for(let i = 0; i < requiredFiles?.length; i++){
+      if(!values[requiredFiles[i]]){
+            (!values?.file && setFileError(true)) 
+            || (!values?.TaskEndDate && setEndDateError(true))
+            || (!values?.UserIds && setAddUserError(true));
+            return
+          }
     }
-    if (!values?.TaskEndDate) {
-      setEndDateError(true)
-      return
-    }
-    if (!values?.UserIds) {
-      setAddUserError(true)
-      return
-    }
+    
     const tempFile = values.file && (await getBase64(values.file));
     const fileFullName = values?.file?.name?.split(".");
     let submitObj = {
@@ -155,7 +157,6 @@ const AddTaskForm = ({ addTaskModalOpen, setAddTaskModalOpen, allData }) => {
       LeadId: selectOptions[values?.customerName],
       Priority: values?.Priority,
     };
-    console.log("temp", temp);
     await dispatch(addTask(temp));
     reset();
     setFileLabel(INITIAL_FILE_LABEL);
@@ -182,6 +183,13 @@ const AddTaskForm = ({ addTaskModalOpen, setAddTaskModalOpen, allData }) => {
     dispatch(getCompanyMembers({ from: 1, to: 1000 }));
   }, []);
 
+  useEffect(() => {
+    if(values.Title) clearErrors("Title");
+  }, [values.Title, clearErrors])
+
+  useEffect(() => {
+    if(values.Description) clearErrors("Description");
+  }, [values.Description, clearErrors])
   return (
     <div>
       <form>
@@ -202,6 +210,9 @@ const AddTaskForm = ({ addTaskModalOpen, setAddTaskModalOpen, allData }) => {
                         <div
                           onClick={() => {
                             setSelectedTab(id);
+                            setFileError(false)
+                            setAddUserError(false)
+                            setEndDateError(false)
                             reset();
                           }}
                           className={
@@ -222,6 +233,10 @@ const AddTaskForm = ({ addTaskModalOpen, setAddTaskModalOpen, allData }) => {
                     variant="standard"
                     {...register("Title", { required: "Please Enter Title" })}
                     value={watch(values.Title || "")}
+                    onChange={(e) => {
+                      setValue("Title", e.target.value);
+                      clearErrors("Title")
+                    }}
                   ></TextField>
                   <div className={styles.errorMessage}>
                     {errors.Title && errors.Title.message}
@@ -234,10 +249,14 @@ const AddTaskForm = ({ addTaskModalOpen, setAddTaskModalOpen, allData }) => {
                     className={classes.fullWidth}
                     variant="standard"
                     value={watch(values.Description || "")}
-                    // defaultValue={initialValues.Description}
+                    defaultValue={initialValues.Description}
                     {...register("Description", {
                       required: "Please Enter Description",
                     })}
+                    onChange={(e) => {
+                      setValue("Description", e.target.value);
+                      clearErrors("Description")
+                    }}
                   ></TextField>
                   <div className={styles.errorMessage}>
                     {errors && errors.Description && errors.Description.message}
@@ -374,11 +393,11 @@ const AddTaskForm = ({ addTaskModalOpen, setAddTaskModalOpen, allData }) => {
                     />
                   </div>
                 )}
+                {selectedTab !== 1 && <div className={styles.errorMessage}>{addUserError && "Add User is required"}</div>}
                 {/* <div className={styles.errorMessage}>
                   {errors.UserIds ? "Please Select Users" : ""}
                 </div> */}
                 
-                <div className={styles.errorMessage}>{addUserError && "File is required"}</div>
                 <div>
                   <Autocomplete
                     multiple
@@ -417,7 +436,6 @@ const AddTaskForm = ({ addTaskModalOpen, setAddTaskModalOpen, allData }) => {
                 className={styles.btnStyle}
                 // type="submit"
                 onClick={(e) => {
-                  console.log('kjf')
                   trigger()
                   handleFormSubmit(e)
                 }}
