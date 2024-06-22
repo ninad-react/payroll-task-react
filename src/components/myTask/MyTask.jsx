@@ -341,6 +341,7 @@ const MyTask = () => {
 
   useEffect(() => {
     if(selectedTab === 0) {
+      setPage(0)
       const timer = setTimeout(() => {
         searchTerm && allData();
       },1000);

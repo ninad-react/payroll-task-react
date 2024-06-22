@@ -19,6 +19,7 @@ import styles from './myTask.module.scss'
 import dayjs from 'dayjs';
 import { DatePicker } from '@mui/x-date-pickers';
 import { makeStyles } from '@mui/styles';
+import toast from 'react-hot-toast';
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -52,10 +53,10 @@ const FilterForm = ({ filterModalOpen, setFilterModalOpen }) => {
         };
       }, [filter]);
 
-    console.log('filter', filter, initialValues);
+    // console.log('filter', filter, initialValues);
 
-    const { register, getValues, reset, setValue, handleSubmit } = useForm({
-        initialValues,
+    const { register, getValues, reset, setValue, handleSubmit, watch, formState: { errors }, } = useForm({
+        defaultValues: initialValues,
     });
 
     const statusOptions = {
@@ -76,7 +77,17 @@ const FilterForm = ({ filterModalOpen, setFilterModalOpen }) => {
 
     const handleFormSubmit = () => {
         const values = getValues();
-        console.log('values', values);
+        if (
+            watch('TaskStatus') === '' && 
+            watch('Priority') === '' && 
+            watch('member') === '' &&
+            watch('FromDueDate') === null &&
+            watch('ToDueDate') === null
+        ) {
+            toast.error("Please fill in at least one field before applying the filter");
+            return;
+        }
+        
         const temp = {
             TaskStatus: values?.TaskStatus,
             Priority: values?.Priority || "",
@@ -96,7 +107,9 @@ const FilterForm = ({ filterModalOpen, setFilterModalOpen }) => {
     }
 
   return (
-    <form className={classes.modal}>
+    <form className={classes.modal} 
+    // onSubmit={handleSubmit(handleFormSubmit)}
+    >
         <Dialog
             open={filterModalOpen}
             onClose={() => setFilterModalOpen(false)}
@@ -121,6 +134,9 @@ const FilterForm = ({ filterModalOpen, setFilterModalOpen }) => {
                             labelId="demo-simple-select-standard-label"
                             id="demo-simple-select-standard"
                             name="TaskStatus"
+                            // {...register("TaskStatus", {
+                            //     required: "Please select Task Status",
+                            //   })}
                             {...register("TaskStatus")}
                             defaultValue={initialValues.TaskStatus}
                             onChange={(e) => handleChange(e, "TaskStatus")}
@@ -142,6 +158,9 @@ const FilterForm = ({ filterModalOpen, setFilterModalOpen }) => {
                             name="Priority"
                             labelId="demo-simple-select-standard-label"
                             id="demo-simple-select-standard"
+                            // {...register("Priority", {
+                            //     required: "Please select Priority",
+                            //   })}
                             {...register("Priority")}
                             defaultValue={initialValues.Priority}
                             onChange={(e) => handleChange(e, "Priority")}
@@ -167,11 +186,17 @@ const FilterForm = ({ filterModalOpen, setFilterModalOpen }) => {
                             defaultValue={initialValues.member}
                             name="member"
                             variant="standard"
+                            // {...register("member", {
+                            //     required: "Please select a member",
+                            //   })}
                             {...register("member")}
                             onChange={(e) => handleChange(e, "member")}
                         >
                             <MenuItem value={getUserId()}>Rijo Varghese</MenuItem>
                         </Select>
+                        {/* <div className={styles.errorMessage}>
+                            {errors.member && errors.member.message}
+                        </div> */}
                     </FormControl>
 
                     <FormControl variant="standard" fullWidth className={classes.div}>
@@ -213,7 +238,7 @@ const FilterForm = ({ filterModalOpen, setFilterModalOpen }) => {
                 <Button
                     className={styles.btnStyle}
                     type="submit"
-                    onClick={() => handleSubmit((e) => handleFormSubmit(e))()}
+                    onClick={() => handleSubmit(handleFormSubmit)()}
                 >
                     Apply
                 </Button>
